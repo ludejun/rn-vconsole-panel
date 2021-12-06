@@ -1,0 +1,34 @@
+{
+  "name": "rn-vconsole",
+  "version": "1.0.0",
+  "description": "A Logger that runs on the device is the same as the chrome console or vconsole. rn-vconsole can log the Console, Network, Router Stack, Storage, System Info automatic.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf lib && tsc"
+  },
+  "keywords": [
+    "react-native-console",
+    "vconsole",
+    "debugger",
+    "rn-console",
+    "rnboat",
+    "logger-board",
+    "logger",
+    "network",
+    "proxy",
+    "stack",
+    "storage",
+    "system",
+    "monitor"
+  ],
+  "author": "ludejun@live.cn",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-native": ">=0.59.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.2"
+  }
+}

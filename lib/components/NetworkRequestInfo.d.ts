@@ -1,0 +1,34 @@
+import { Headers, RequestMethod } from './types';
+export default class NetworkRequestInfo {
+    id: string;
+    type: string;
+    url: string;
+    method: RequestMethod;
+    status: number;
+    dataSent: string;
+    responseContentType: string;
+    responseSize: number;
+    requestHeaders: Headers;
+    responseHeaders: Headers;
+    response: string;
+    responseURL: string;
+    responseType: string;
+    timeout: number;
+    closeReason: string;
+    messages: string;
+    serverClose: any;
+    serverError: any;
+    startTime: number;
+    endTime: number;
+    gqlOperation?: string;
+    constructor(id: string, type: string, method: RequestMethod, url: string);
+    get duration(): number;
+    get curlRequest(): string;
+    update(values: Partial<NetworkRequestInfo>): void;
+    private escapeQuotes;
+    private parseData;
+    private stringifyFormat;
+    getRequestBody(replaceEscaped?: boolean): string;
+    private parseResponseBlob;
+    getResponseBody(): Promise<string>;
+}
