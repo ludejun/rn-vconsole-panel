@@ -18,6 +18,7 @@ export const ConsoleBoard = (props: ConsoleBoard) => {
     info: '#0074D9',
     warn: '#FF851B',
     error: '#FF4136',
+    custom: '#ffc007'
   }
   const onClickType = (type: string) => {
     if (type === 'all') setData(data)
@@ -41,7 +42,7 @@ export const ConsoleBoard = (props: ConsoleBoard) => {
       <View style={defaultStyle.logContent}>
         <ScrollView ref={sc}>
           {listData.map(({ type, messages }, i) => <View style={defaultStyle.item} key={`${type}${i}`}>
-            <Text style={[defaultStyle.dot, { color: colorMap[type] }]}>•</Text>
+            <Text style={[defaultStyle.dot, { color: colorMap[type] || colorMap.custom }]}>•</Text>
             <View style={defaultStyle.messages}>
               <LogContent key={i} messages={messages} />
             </View>
@@ -53,7 +54,7 @@ export const ConsoleBoard = (props: ConsoleBoard) => {
         <TouchableOpacity onPress={() => onClickType('all')} style={[defaultStyle.button]}>
           <Text style={defaultStyle.label}>All</Text>
         </TouchableOpacity>
-        {types.map(type => <TouchableOpacity key={type} onPress={() => onClickType(type)} style={[defaultStyle.button, { backgroundColor: colorMap[type] }]}>
+        {types.map(type => <TouchableOpacity key={type} onPress={() => onClickType(type)} style={[defaultStyle.button, { backgroundColor: colorMap[type] || colorMap.custom }]}>
           <Text style={defaultStyle.label}>{type}</Text>
         </TouchableOpacity>)}
       </View>
@@ -100,7 +101,7 @@ const defaultStyle = StyleSheet.create({
     backgroundColor: '#ddd',
     padding: 3,
     height: 20,
-    width: 45,
+    width: 48,
     borderRadius: 5,
     marginRight: 8,
   },

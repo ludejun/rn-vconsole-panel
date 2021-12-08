@@ -46,10 +46,10 @@ export const handleRNNavigationStateChange = (state: any) => {
 
  export interface RNConsole {
   entryVisible?: boolean; // 可以通过父组件控制面板是否展示
-  entryText?: string; // 入口Button显示的文字，默认为Logger
+  entryText?: string; // 入口Button显示的文字，默认为RNConsole
   entryStyle?: ViewStyle; // 入口Button的样式
   consoleType?: string[]; // 需要console打印出来的日志类型，可以传入自定义类型，默认为['log', 'info', 'warn', 'error']
-  maxLogLength?: number; // 各种类型日志数组的长度，超出长度则删除之前暂存的日志
+  maxLogLength?: number; // 各种类型日志数组的长度，超出长度则删除之前暂存的日志，默认200
   ignoredHosts?: string[]; // Network中需要忽略的host
   storage?: {
     getAllKeys: () => Promise<string[]>;
