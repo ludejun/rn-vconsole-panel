@@ -1,8 +1,9 @@
 {
   "name": "rn-vconsole",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Logger that runs on the device is the same as the chrome console or vconsole. rn-vconsole can log the Console, Network, Router Stack, Storage, System Info automatic.",
   "main": "lib/index.js",
+  "type": "lib/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf lib && tsc"

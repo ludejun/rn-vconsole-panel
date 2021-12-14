@@ -59,7 +59,7 @@ const RequestOverview = (props: { data: NetworkRequestInfo }) => {
   const onClickRequest = () => {
     setShow(show === 'none' ? 'flex' : 'none')
     setBody(jsonParse(requestBody))
-    data.getResponseBody().then((resp) => setResp(jsonParse(resp)))
+    data.getResponseBody().then(resp => setResp(jsonParse(resp)))
   }
 
   return (
@@ -137,11 +137,11 @@ const defaultStyle = StyleSheet.create({
   },
   clear: {
     position: 'absolute',
-    top: -12,
+    top: -8,
     right: 0,
     backgroundColor: '#ffc007',
-    padding: 3,
-    height: 20,
+    justifyContent: 'center',
+    height: 24,
     width: 65,
     borderRadius: 5,
   },

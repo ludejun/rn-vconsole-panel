@@ -1,13 +1,12 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { LogContent } from './LogContent'
 import { jsonParse } from '../utils'
-import { removeComments } from '@babel/types'
 
 export interface StorageBoard {
   storage?: {
     getAllKeys: () => Promise<string[]>;
-    getItem: (key: string) => Promise<string>;
+    getItem: (key: string) => Promise<string> | null;
     setItem?: (key: string, value: string) => Promise<void>;
     removeItem?: (key: string) => Promise<void>;
     clear?: () => Promise<void>;
@@ -48,7 +47,6 @@ export const StorageBoard: FC<StorageBoard> = props => {
     setText(JSON.stringify(data[key]))
   }
   const onClickEdit = () => {
-    console.info(3333, edit, itemData, text)
     if (edit) {
       itemData && setItem && setItem(itemData.key, text)
       setEdit(false)
@@ -66,6 +64,7 @@ export const StorageBoard: FC<StorageBoard> = props => {
   return (
     <View style={defaultStyle.container}>
       <ScrollView ref={sc}>
+        <View style={defaultStyle.list}>
         {
           Object.keys(data).length > 0 ? Object.keys(data).map(key => (
             <TouchableOpacity key={key} onPress={() => onClickItem(key)}>
@@ -78,18 +77,22 @@ export const StorageBoard: FC<StorageBoard> = props => {
             </TouchableOpacity>
           )) : <Text style={defaultStyle.disable}>StorageBoard has not been enabled as the functions "getAllKeys", "getItem" are missing.</Text>
         }
+        </View>
+        <View style={[defaultStyle.bottom, {
+          display: !!itemData ? 'flex' : 'none',
+          // position: !!itemData ? 'absolute' : 'relative',
+          // top: Dimensions.get('screen').height - 260
+          }]}>
+          <View style={defaultStyle.edit}>
+            <Text style={defaultStyle.left}>{itemData?.key}</Text>
+            <TextInput value={text} multiline editable={edit} style={defaultStyle.input} onChangeText={(text: string) => setText(text)} />
+          </View>
+          <View style={defaultStyle.row}>
+            <TouchableOpacity onPress={() => onClickEdit()} style={defaultStyle.button}><Text style={defaultStyle.label}>{edit ? 'Save' : 'Edit'} Item</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => onClearItem()} style={defaultStyle.button}><Text style={defaultStyle.label}>Clear Item</Text></TouchableOpacity>
+          </View>
+        </View>
       </ScrollView>
-
-      <View style={[defaultStyle.bottom, { display: itemData ? 'flex' : 'none' }]}>
-        <View style={defaultStyle.edit}>
-          <Text style={defaultStyle.left}>{itemData?.key}</Text>
-          <TextInput value={text} multiline editable={edit} style={defaultStyle.input} onChangeText={(text: string) => setText(text)} />
-        </View>
-        <View style={defaultStyle.row}>
-          <TouchableOpacity onPress={() => onClickEdit()} style={defaultStyle.button}><Text style={defaultStyle.label}>{edit ? 'Save' : 'Edit'} Item</Text></TouchableOpacity>
-          <TouchableOpacity onPress={() => onClearItem()} style={defaultStyle.button}><Text style={defaultStyle.label}>Clear Item</Text></TouchableOpacity>
-        </View>
-      </View>
 
       {clear ? <View style={defaultStyle.clear}>
         <TouchableOpacity onPress={() => onClickClear()}>
@@ -104,6 +107,9 @@ const defaultStyle = StyleSheet.create({
   container: {
     height: '100%',
   },
+  list: {
+
+  },
   item: {
     flexDirection: 'row',
     paddingTop: 4,
@@ -116,6 +122,7 @@ const defaultStyle = StyleSheet.create({
   },
   right: {
     flex: 1,
+    paddingLeft: 10,
   },
   disable: {
     paddingTop: 20,
@@ -127,11 +134,11 @@ const defaultStyle = StyleSheet.create({
   },
   clear: {
     position: 'absolute',
-    top: -12,
+    top: -8,
     right: 0,
     backgroundColor: '#ffc007',
-    padding: 3,
-    height: 20,
+    justifyContent: 'center',
+    height: 24,
     width: 65,
     borderRadius: 5,
   },
@@ -161,8 +168,6 @@ const defaultStyle = StyleSheet.create({
   },
   bottom: {
     paddingTop: 4,
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
     height: 112,
     backgroundColor: '#eee',

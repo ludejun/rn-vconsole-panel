@@ -71,6 +71,7 @@ const defaultStyle = StyleSheet.create({
   },
   right: {
     flex: 1,
+    paddingLeft: 10,
   }, 
   lineHeight: {
     height: 10,

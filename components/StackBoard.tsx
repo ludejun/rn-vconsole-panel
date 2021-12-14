@@ -13,11 +13,11 @@ export const StackBoard: FC = () => {
   }
 
   useEffect(() => {
-    const stackList = RNStackRef.current
+    const stackList = RNStackRef?.current
     setData(stackList?.map((stack, index) => ({
       ...stack,
       duration: stackList[index + 1] ? (stackList[index + 1].changeTime - stack.changeTime) : (new Date().getTime() - stack.changeTime),
-    })))
+    })) || [])
   }, [])
   useEffect(() => {
     sc.current?.scrollToEnd()
@@ -87,11 +87,11 @@ const defaultStyle = StyleSheet.create({
   },
   clear: {
     position: 'absolute',
-    top: -12,
+    top: -8,
     right: 0,
     backgroundColor: '#ffc007',
-    padding: 3,
-    height: 20,
+    justifyContent: 'center',
+    height: 24,
     width: 65,
     borderRadius: 5,
   },

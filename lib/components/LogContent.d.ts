@@ -1,6 +1,7 @@
 import React from 'react';
 export interface LogContent {
     messages: any;
+    isConsole: boolean;
 }
 export declare class LogContent extends React.Component<any, LogContent> {
     constructor(props: LogContent);

@@ -11,7 +11,10 @@ import {
   StackBoard,
 } from './components'
 
-export { statusBarHeight } // 状态栏高度
+export { 
+  statusBarHeight, // 状态栏高度
+  logger as networkLogger,
+} 
 export const RNStackRef = createRef<stack[]>() // 记录监控App路由变化，都存这个栈里
 export interface stack {
   type: 'stack' | 'tab' | 'drawer';
@@ -53,7 +56,7 @@ export const handleRNNavigationStateChange = (state: any) => {
   ignoredHosts?: string[]; // Network中需要忽略的host
   storage?: {
     getAllKeys: () => Promise<string[]>;
-    getItem: (key: string) => Promise<string>;
+    getItem: (key: string) => Promise<string> | null;
     setItem?: (key: string, value: string) => Promise<void>;
     removeItem?: (key: string) => Promise<void>;
     clear?: () => Promise<void>;
@@ -75,14 +78,13 @@ const RNConsole: React.FC<RNConsole> = props => {
     ignoredHosts,
   } = props
   const [visible, setVisible] = useState(entryVisible ?? false) // 控制面板是否展示
-  const [boardType, setBoardType] = useState<BoardType>('Console') // 当前面板
+  const [boardType, setBoardType] = useState<BoardType>(null) // 当前面板
 
   const init = () => {
     global['$BOARD_LOGGER'] = {
-      Console: [],
+      Console: [], 
     }
   }
-  
   
   const addLog = (boardType: BoardType, log: any) => {
     if (global.$BOARD_LOGGER[boardType].length > maxLogLength) global.$BOARD_LOGGER[boardType].shift()
@@ -90,10 +92,10 @@ const RNConsole: React.FC<RNConsole> = props => {
     global.$BOARD_LOGGER[boardType].push(log)
   }
 
-
   useEffect(() => {
     init()
 
+    // 代理console
     const $console = { ...global.console }
     consoleType.forEach(type => {
       global.console[type] = (...messages) => {
@@ -110,6 +112,7 @@ const RNConsole: React.FC<RNConsole> = props => {
   }, [])
   const onClickEntryButton = () => {
     setVisible(true)
+    setBoardType('Console')
   }
   const onClickBoardType = (type: string) => {
     setBoardType(type)
@@ -123,7 +126,7 @@ const RNConsole: React.FC<RNConsole> = props => {
         </TouchableOpacity>
       </View>
       <Modal visible={visible}>
-        <View style={[defaultStyle.modal, { height: Dimensions.get('window').height - 30 }]}>
+        <View style={[defaultStyle.modal, { height: Dimensions.get('window').height - 30, paddingTop: Platform.OS === 'ios' ? 70 : 30 }]}>
           <View style={defaultStyle.type}>
             {
               (['Console', 'Network', 'Stack', 'Storage', 'System']).map(type => (
@@ -137,13 +140,13 @@ const RNConsole: React.FC<RNConsole> = props => {
             {
               boardType === 'Console' ? <ConsoleBoard types={consoleType} />
                 : boardType === 'Network' ? <Network />
-                  : boardType === 'System' ? <DeviceBoard definedData={definedData}/>
+                : boardType === 'System' ? <DeviceBoard definedData={definedData}/>
                 : boardType === 'Storage' ? <StorageBoard storage={storage} />
                 : boardType === 'Stack' ? <StackBoard /> : null
             }
 
           </View>
-          <View style={defaultStyle.close}>
+          <View style={[defaultStyle.close, { top: Platform.OS === 'ios' ? 40 : 2 }]}>
             <TouchableOpacity onPress={() => setVisible(false)}>
               <Text style={defaultStyle.label}>Close</Text>
             </TouchableOpacity>
@@ -169,16 +172,14 @@ const defaultStyle = StyleSheet.create({
   },
   modal: {
     padding: 10,
-    paddingTop: 64,
     display: 'flex',
   },
   button: {
     backgroundColor: '#ddd',
-    padding: 3,
-    height: 25,
+    height: 24,
     width: 65,
     borderRadius: 5,
-    // marginRight: 8,
+    justifyContent: 'center',
   },
   activeButton: {
     backgroundColor: '#eee',
@@ -189,7 +190,7 @@ const defaultStyle = StyleSheet.create({
   },
   type: {
     flexDirection: 'row',
-    height: 30,
+    height: 26,
     justifyContent: 'space-between',
   },
   list: {
@@ -201,8 +202,8 @@ const defaultStyle = StyleSheet.create({
     top: 40,
     right: 10,
     backgroundColor: '#ffc007',
-    padding: 3,
-    height: 20,
+    justifyContent: 'center',
+    height: 24,
     width: 65,
     borderRadius: 5,
   },

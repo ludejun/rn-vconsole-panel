@@ -1,7 +1,8 @@
 import React from 'react';
 import { ViewStyle } from 'react-native';
-import { statusBarHeight } from './components';
-export { statusBarHeight };
+import { logger, statusBarHeight } from './components';
+export { statusBarHeight, // 状态栏高度
+logger as networkLogger, };
 export declare const RNStackRef: React.RefObject<stack[]>;
 export interface stack {
     type: 'stack' | 'tab' | 'drawer';
@@ -20,7 +21,7 @@ export interface RNConsole {
     ignoredHosts?: string[];
     storage?: {
         getAllKeys: () => Promise<string[]>;
-        getItem: (key: string) => Promise<string>;
+        getItem: (key: string) => Promise<string> | null;
         setItem?: (key: string, value: string) => Promise<void>;
         removeItem?: (key: string) => Promise<void>;
         clear?: () => Promise<void>;

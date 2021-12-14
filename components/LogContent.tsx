@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 export interface LogContent {
   messages: any;
+  isConsole: boolean;
 }
 export class LogContent extends React.Component<any, LogContent> {
   constructor(props: LogContent) {
@@ -44,7 +45,8 @@ export class LogContent extends React.Component<any, LogContent> {
   }
 
   render() {
-    return Array.isArray(this.props.messages) ? this.props.messages.map(message => this.renderMessage(message, undefined, undefined)) : this.renderMessage(this.props.messages, undefined, undefined)
+    const { messages, isConsole = false } = this.props;
+    return Array.isArray(messages) ? messages.map((message, index) => this.renderMessage(message, isConsole ? undefined : index, isConsole ? undefined : index)) : this.renderMessage(messages, undefined, undefined)
   }
 }
 
@@ -107,7 +109,7 @@ export const LogContentObject = props => {
   return (
     <TouchableOpacity onPress={toggle}>
       <Text numberOfLines={1}>
-        {icon} {name}{name ? ': ' : ''} {!isShow ? showMsg : ''}
+        {icon} {name}{name || name === 0 ? ': ' : ''} {!isShow ? showMsg : ''}
       </Text>
     </TouchableOpacity>
   )
@@ -132,7 +134,7 @@ export const LogContentArray = props => {
   return (
     <TouchableOpacity onPress={toggle}>
       <Text numberOfLines={1}>
-        {icon} {`${name}${name ? ': ' : ''}(${message.length})${showMsg}`}
+        {icon} {`${name}${name || name === 0 ? ': ' : ''}(${message.length})${showMsg}`}
       </Text>
     </TouchableOpacity>
   )

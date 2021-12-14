@@ -4,7 +4,7 @@
 
 A Logger that runs on the device is the same as the chrome console or [vConsole](https://github.com/Tencent/vConsole). rn-vconsole can log the Console, Network, Router Stack, Storage, System Info automatic.
 
-### Features
+## Features
 
 - 无侵入、分类型、分颜色展示Console日志
 
@@ -28,7 +28,7 @@ A Logger that runs on the device is the same as the chrome console or [vConsole]
 
   
 
-### Installation
+## Installation
 
 ```shell
 npm install rn-vconsole
@@ -36,7 +36,7 @@ npm install rn-vconsole
 yarn add rn-vconsole
 ```
 
-### Quick Start
+## Quick Start
 
 ```jsx
 import RNConsole, { handleRNNavigationStateChange } from 'rn-vconsole'
@@ -62,23 +62,41 @@ return (
 )
 ```
 
-### Screenshots
+## Screenshots
+
+Entry & Console Board:
+
+<p float="left" align="center">
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/entry-ios12.png" width="300" />
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/console-board-ios12.jpg" width="300" /> 
+</p>
+
+Network Board & Stack Board:
+
+<p float="left" align="center">
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/network-board-ios12.png" width="300" />
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/stack-board-ios12.png" width="300" /> 
+</p>
+
+Storage Board & System Board:
+
+<p float="left" align="center">
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/storage-board-ios12.png" width="300" />
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/system-board-ios12.png" width="300" /> 
+</p>
 
 
 
 
-
-
-
-### Configuration
+## Configuration
 
 ```js
-import RNConsole, { statusBarHeight, RNStackRef, handleRNNavigationStateChange } from 'rn-vconsole';
+import RNConsole, { statusBarHeight, RNStackRef, handleRNNavigationStateChange, networkLogger } from 'rn-vconsole';
 ```
 
-下面分别介绍rn-vconsole导出的RNConsole组件和其余三个值：
+下面分别介绍rn-vconsole导出的RNConsole组件和其余四个值：
 
-#### RNConsole Component
+#### 1. RNConsole Component
 
 一般接入在顶层App容器中，共分5个面板
 
@@ -119,7 +137,9 @@ console.monitor(222222, [2, { a: 'wefawef', c: { d: 1234134 } }, [4, 5, 6]])
 
 Result:
 
-
+<p float="left" align="center">
+  <img src="https://raw.githubusercontent.com/ludejun/rn-vconsole/master/examples/custom-console-type-ios12.png" width="300" />
+</p>
 
 ##### maxLogLength
 
@@ -165,13 +185,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
-#### statusBarHeight
+#### 2. statusBarHeight: number
 
 The statusBar height of Android or iOS.
 
 
 
-#### RNStackRef：createRef<stack[]>()
+#### 3. RNStackRef：createRef<stack[]>()
 
 存储所有页面栈的数据，可以供监控或者埋点，当前页面就是栈中的最后一项。是Stack面板的数据源。
 
@@ -187,7 +207,7 @@ interface stack {
 
 
 
-#### handleRNNavigationStateChange:  (state) => void
+#### 4. handleRNNavigationStateChange:  (state) => void
 
 需要在NavigationContainer的onStateChange方法中调用，用来监听页面变化，如没有监听则Stack面板为空
 
@@ -204,7 +224,21 @@ interface stack {
 
 
 
-### Others 
+#### 5. networkLogger
+
+The instance of networkLogger. You can get or handle all requests.
+
+```js
+networkLogger.getRequests(); // get all data of request list
+networkLogger.clearRequests(); // clear all data
+...
+```
+
+
+
+
+
+## Others 
 
 "Clear" means clear all data in this board.
 
@@ -212,7 +246,7 @@ interface stack {
 
 
 
-### Issues
+## Issues
 
 tsc(tsconfig.json) compile react-native npm library：ReferenceError: React is not defined
 
@@ -222,15 +256,15 @@ Origin tsconfig.json:
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "es5", 
+    "target": "es5",
     "module": "commonjs",
     "lib": [],
     "allowJs": true,                          /* Allow javascript files to be compiled. */
     "jsx": "react-native",
     "declaration": true,                   /* Generates corresponding '.d.ts' file. */
-    "outDir": "./lib",                        /* Redirect output structure to the directory. */
+    "outDir": "./lib",
     "isolatedModules": true,
-    "strict": false,                           /* Enable all strict type-checking options. */
+    "strict": false,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true

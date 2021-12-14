@@ -10,7 +10,7 @@ export const ConsoleBoard = (props: ConsoleBoard) => {
   const { types } = props
   // @ts-ignore
   const data = global.$BOARD_LOGGER.Console
-  const [listData, setData] = useState(data)
+  const [listData, setData] = useState([])
   const sc = useRef(null)
 
   const colorMap: Record<string, string> = {
@@ -44,7 +44,7 @@ export const ConsoleBoard = (props: ConsoleBoard) => {
           {listData.map(({ type, messages }, i) => <View style={defaultStyle.item} key={`${type}${i}`}>
             <Text style={[defaultStyle.dot, { color: colorMap[type] || colorMap.custom }]}>•</Text>
             <View style={defaultStyle.messages}>
-              <LogContent key={i} messages={messages} />
+              <LogContent key={i} messages={messages} isConsole />
             </View>
           </View>)}
         </ScrollView>
@@ -101,7 +101,7 @@ const defaultStyle = StyleSheet.create({
     backgroundColor: '#ddd',
     padding: 3,
     height: 20,
-    width: 48,
+    width: 50,
     borderRadius: 5,
     marginRight: 8,
   },
@@ -111,11 +111,11 @@ const defaultStyle = StyleSheet.create({
   },
   clear: {
     position: 'absolute',
-    top: -12,
+    top: -8,
     right: 0,
     backgroundColor: '#ffc007',
-    padding: 3,
-    height: 20,
+    justifyContent: 'center',
+    height: 24,
     width: 65,
     borderRadius: 5,
   }
