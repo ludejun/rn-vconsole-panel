@@ -1,4 +1,4 @@
-# RN-Vconsole
+# rn-vconsole-panel
 
 
 
@@ -31,15 +31,15 @@ A Logger that runs on the device is the same as the chrome console or [vConsole]
 ## Installation
 
 ```shell
-npm install rn-vconsole
+npm install rn-vconsole-panel
 # or
-yarn add rn-vconsole
+yarn add rn-vconsole-panel
 ```
 
 ## Quick Start
 
 ```jsx
-import RNConsole, { handleRNNavigationStateChange } from 'rn-vconsole'
+import RNConsole, { handleRNNavigationStateChange } from 'rn-vconsole-panel'
 import { NavigationContainer } from '@react-navigation/native'
 
 return (
@@ -91,7 +91,7 @@ Storage Board & System Board:
 ## Configuration
 
 ```js
-import RNConsole, { statusBarHeight, RNStackRef, handleRNNavigationStateChange, networkLogger } from 'rn-vconsole';
+import RNConsole, { statusBarHeight, RNStackRef, handleRNNavigationStateChange, networkLogger } from 'rn-vconsole-panel';
 ```
 
 下面分别介绍rn-vconsole导出的RNConsole组件和其余四个值：
