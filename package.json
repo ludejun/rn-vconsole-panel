@@ -1,6 +1,6 @@
 {
   "name": "rn-vconsole-panel",
-  "version": "1.0.2",
+  "version": "1.0.2-bate0",
   "description": "A Logger that runs on the device is the same as the chrome console or vconsole. rn-vconsole-panel can log the Console, Network, Router Stack, Storage, System Info automatic.",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
@@ -24,6 +24,13 @@
     "monitor"
   ],
   "author": "ludejun@live.cn",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ludejun/rn-vconsole-panel"
+  },
+  "bugs": {
+    "url": "https://github.com/ludejun/rn-vconsole-panel/issues"
+  },
   "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",

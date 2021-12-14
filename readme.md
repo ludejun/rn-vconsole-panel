@@ -2,7 +2,7 @@
 
 
 
-A Logger that runs on the device is the same as the chrome console or [vConsole](https://github.com/Tencent/vConsole). rn-vconsole can log the Console, Network, Router Stack, Storage, System Info automatic.
+A Logger that runs on the device is the same as the chrome console or [vConsole](https://github.com/Tencent/vConsole). rn-vconsole-panel can log the Console, Network, Router Stack, Storage, System Info automatic.
 
 ## Features
 
@@ -43,8 +43,8 @@ import RNConsole, { handleRNNavigationStateChange } from 'rn-vconsole-panel'
 import { NavigationContainer } from '@react-navigation/native'
 
 return (
-	<View flex>
-  	<NavigationContainer
+  <View flex>
+    <NavigationContainer
       onStateChange={(state) => {
         handleRNNavigationStateChange(state) // listen to the change of navigation
         // ...
