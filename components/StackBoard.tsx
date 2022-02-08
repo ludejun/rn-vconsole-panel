@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { LogContent } from './LogContent'
-import { stack, RNStackRef } from '..'
+import { stack, RNStackRef } from '../index'
 
 export const StackBoard: FC = () => {
   const sc = useRef(null)
@@ -14,6 +14,7 @@ export const StackBoard: FC = () => {
 
   useEffect(() => {
     const stackList = RNStackRef?.current
+    // console.log(stackList)
     setData(stackList?.map((stack, index) => ({
       ...stack,
       duration: stackList[index + 1] ? (stackList[index + 1].changeTime - stack.changeTime) : (new Date().getTime() - stack.changeTime),

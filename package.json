@@ -1,6 +1,6 @@
 {
   "name": "rn-vconsole-panel",
-  "version": "1.0.2-bate0",
+  "version": "1.0.2-bate1",
   "description": "A Logger that runs on the device is the same as the chrome console or vconsole. rn-vconsole-panel can log the Console, Network, Router Stack, Storage, System Info automatic.",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
