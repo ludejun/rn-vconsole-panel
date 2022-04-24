@@ -6,13 +6,11 @@ A Logger that runs on the device is the same as the chrome console or [vConsole]
 
 ## Features
 
-- 无侵入、分类型、分颜色展示Console日志
+- 无侵入、分日志类型、数据类型分颜色展示Console日志
 
 - 可以记录自定义Console类型的日志
 
 - Log networks requests on iOS and Android
-
-- View network requests made with in app viewer
 
 - Debug console, network requests and storage on release builds
 
@@ -24,7 +22,7 @@ A Logger that runs on the device is the same as the chrome console or [vConsole]
 
 - 可以展示所有缓存数据，删除所有或者某一条缓存，修改某一条缓存
 
-- 展示设备信息，可以展示用户自定义数据
+- 展示设备信息：os、版本、宽高、分辨率、状态栏高度等，可以展示用户自定义数据，如：用户信息、uuid、app version、当前环境等
 
   
 
