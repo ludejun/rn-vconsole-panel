@@ -1,6 +1,6 @@
 {
   "name": "rn-vconsole-panel",
-  "version": "1.0.2-bate1",
+  "version": "1.0.3",
   "description": "A Logger that runs on the device is the same as the chrome console or vconsole. rn-vconsole-panel can log the Console, Network, Router Stack, Storage, System Info automatic.",
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
@@ -37,6 +37,8 @@
     "react-native": ">=0.59.0"
   },
   "devDependencies": {
+    "@types/react": "^18.0.26",
+    "@types/react-native": "^0.70.7",
     "typescript": "^4.5.2"
   }
 }

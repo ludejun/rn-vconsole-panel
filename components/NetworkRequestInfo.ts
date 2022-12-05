@@ -1,7 +1,8 @@
 // https://github.com/alexbrazier/react-native-network-logger/blob/6c11bb2b7b887fa75aead0fde44523aced84d62b/src/NetworkRequestInfo.ts
-import BlobFileReader from 'react-native/Libraries/Blob/FileReader'
-import { Headers, RequestMethod } from './types'
-import { fromEntries } from '../utils'
+// @ts-nocheck
+import BlobFileReader from 'react-native/Libraries/Blob/FileReader';
+import { Headers, RequestMethod } from './types';
+import { fromEntries } from '../utils';
 
 export default class NetworkRequestInfo {
   id = '';
@@ -47,8 +48,7 @@ export default class NetworkRequestInfo {
 
     const body = this.dataSent && this.escapeQuotes(this.dataSent);
 
-    const methodPart =
-      this.method !== 'GET' ? `-X${this.method.toUpperCase()}` : '';
+    const methodPart = this.method !== 'GET' ? `-X${this.method.toUpperCase()}` : '';
     const bodyPart = body ? `-d '${body}'` : '';
 
     const parts = ['curl', methodPart, headersPart, bodyPart, `'${this.url}'`];
@@ -109,9 +109,7 @@ export default class NetworkRequestInfo {
   }
 
   async getResponseBody() {
-    const body = await (this.responseType !== 'blob'
-      ? this.response
-      : this.parseResponseBlob());
+    const body = await (this.responseType !== 'blob' ? this.response : this.parseResponseBlob());
 
     return this.stringifyFormat(body);
   }
