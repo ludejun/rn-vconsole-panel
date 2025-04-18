@@ -1,30 +1,26 @@
 # rn-vconsole-panel
 
-
-
 A Logger that runs on the device is the same as the chrome console or [vConsole](https://github.com/Tencent/vConsole). rn-vconsole-panel can log the Console, Network, Router Stack, Storage, System Info automatic.
 
 ## Features
 
-- 无侵入、分日志类型、数据类型分颜色展示Console日志
+- Non-intrusive, categorized by log type, and displayed in different colors for Console logs
 
-- 可以记录自定义Console类型的日志
+- Can record custom Console log types
 
 - Log networks requests on iOS and Android
 
-- Debug console, network requests and storage on release builds
+- Debug console, network requests, and storage on release builds
 
-- 监听API耗时
+- Monitor API response time
 
-- 记录用户操作App时的页面栈变化及所携带参数
+- Record the page stack changes and parameters when users navigate through the app
 
-- 监听用户在每个页面停留时间
+- Track the time users spend on each page
 
-- 可以展示所有缓存数据，删除所有或者某一条缓存，修改某一条缓存
+- Display all cached data, delete all or specific cache entries, and modify specific cache entries
 
-- 展示设备信息：os、版本、宽高、分辨率、状态栏高度等，可以展示用户自定义数据，如：用户信息、uuid、app version、当前环境等
-
-  
+- Show device information: OS, version, dimensions, resolution, status bar height, etc., and display user-defined data such as user info, UUID, app version, current environment, etc.
 
 ## Installation
 
@@ -50,7 +46,7 @@ return (
     >
       // Stack & Screen & Tab
     </NavigationContainer>
-    {['dev', 'sit'].includes(RNConfig.NODE_ENV) ? 
+    {['dev', 'sit'].includes(RNConfig.NODE_ENV) ?
       <RNConsole
         definedData={{
           userInfo: props.userInfo,
@@ -83,50 +79,52 @@ Storage Board & System Board:
   <img src="https://cdn.jsdelivr.net/gh/ludejun/rn-vconsole-panel/examples/system-board-ios12.png" width="300" /> 
 </p>
 
-
-
-
 ## Configuration
 
 ```js
-import RNConsole, { statusBarHeight, RNStackRef, handleRNNavigationStateChange, networkLogger } from 'rn-vconsole-panel';
+import RNConsole, {
+  statusBarHeight,
+  RNStackRef,
+  handleRNNavigationStateChange,
+  networkLogger,
+} from 'rn-vconsole-panel';
 ```
 
-下面分别介绍rn-vconsole导出的RNConsole组件和其余四个值：
+Below are the details of the RNConsole component and other exported values:
 
 #### 1. RNConsole Component
 
-一般接入在顶层App容器中，共分5个面板
+Typically integrated into the top-level App container, divided into 5 panels.
 
-Properties：
+Properties:
 
 ```tsx
 interface RNConsole {
-  entryVisible?: boolean; // 可以通过父组件控制面板是否展示
-  entryText?: string; // 入口Button显示的文字，默认为RNConsole
-  entryStyle?: ViewStyle; // 入口Button的样式
-  consoleType?: string[]; // 需要console打印出来的日志类型，可以传入自定义类型，默认为['log', 'info', 'warn', 'error']
-  maxLogLength?: number; // 各种类型日志数组的长度，超出长度则删除之前暂存的日志，默认200
-  ignoredHosts?: string[]; // Network中需要忽略的host
+  entryVisible?: boolean; // Control whether the panel is displayed
+  entryText?: string; // Text displayed on the entry button, default is "RNConsole"
+  entryStyle?: ViewStyle; // Style of the entry button
+  consoleType?: string[]; // Types of logs to display in the Console panel, default is ['log', 'info', 'warn', 'error']
+  maxLogLength?: number; // Maximum length of log arrays, older logs are removed when exceeded, default is 200
+  ignoredHosts?: string[]; // Hosts to ignore in the Network panel
   storage?: {
     getAllKeys: () => Promise<string[]>;
     getItem: (key: string) => Promise<string>;
     setItem?: (key: string, value: string) => Promise<void>;
     removeItem?: (key: string) => Promise<void>;
     clear?: () => Promise<void>;
-   }; // 读取缓存的各种方式，根据传入方法数展示功能，API参考 https://github.com/react-native-async-storage/async-storage#react-native-async-storage
-  definedData?: Record<string, any>; // 在SystemBoard展示的自定义数据
+  }; // Methods for interacting with storage, API reference: https://github.com/react-native-async-storage/async-storage#react-native-async-storage
+  definedData?: Record<string, any>; // Custom data to display in the System panel
 }
 ```
 
 ##### consoleType
 
-为Console面板展示的console类型，默认为['log', 'info', 'warn', 'error']，可以添加自定义类型
+Defines the types of logs displayed in the Console panel. Default is ['log', 'info', 'warn', 'error']. Custom types can be added.
 
 ```js
 // example: Add "monitor" type
-console.monitor(111111, [1,{a: 'wefawef', c: { d: 1234134}}, [4,5,6]])
-console.monitor(222222, [2, { a: 'wefawef', c: { d: 1234134 } }, [4, 5, 6]])
+console.monitor(111111, [1, { a: 'wefawef', c: { d: 1234134 } }, [4, 5, 6]]);
+console.monitor(222222, [2, { a: 'wefawef', c: { d: 1234134 } }, [4, 5, 6]]);
 ```
 
 ```jsx
@@ -141,23 +139,15 @@ Result:
 
 ##### maxLogLength
 
-所有面板展示日志的长度，超出长度前面的出栈，默认为200
+Maximum length of logs displayed in all panels. Older logs are removed when exceeded. Default is 200.
 
 ##### ignoredHosts
 
-Network面板中需要忽略的host数组，默认忽视'localhost:8081'
+Array of hosts to ignore in the Network panel. Default is ['localhost:8081'].
 
 ##### storage
 
-操作storage所需的方法，如没有，则Storage面板展示为空，参考[react-native-async-storage](https://github.com/react-native-async-storage/async-storage#react-native-async-storage) 的API
-
-有getAllKeys、getItem方法则正常展示storage列表
-
-有setItem方法允许重新设置每一项
-
-有removeItem方法允许删除某一项
-
-有clear方法允许删除所有storage列表
+Methods for interacting with storage. If not provided, the Storage panel will be empty. Refer to [react-native-async-storage](https://github.com/react-native-async-storage/async-storage#react-native-async-storage) for API details.
 
 ```jsx
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -169,7 +159,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 ##### definedData
 
-需要在System面板展示的用户自定义Data
+Custom data to display in the System panel.
 
 ```jsx
 <RNConsole
@@ -181,33 +171,27 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 />
 ```
 
-
-
 #### 2. statusBarHeight: number
 
-The statusBar height of Android or iOS.
+The status bar height for Android or iOS.
 
+#### 3. RNStackRef: createRef<stack[]>()
 
-
-#### 3. RNStackRef：createRef<stack[]>()
-
-存储所有页面栈的数据，可以供监控或者埋点，当前页面就是栈中的最后一项。是Stack面板的数据源。
+Stores all page stack data, useful for monitoring or analytics. The current page is the last item in the stack. This is the data source for the Stack panel.
 
 ```tsx
 interface stack {
   type: 'stack' | 'tab' | 'drawer'; // The type of screen, same as @react-navigation/native
   name: string; // Screen name
   params: Record<string, unknown> | undefined; // The params of this screen
-  changeTime: number; // The time of this screen's DidMount, similar
-  duration?: number; // Time on this screen, similar
+  changeTime: number; // The time of this screen's DidMount
+  duration?: number; // Time spent on this screen
 }
 ```
 
+#### 4. handleRNNavigationStateChange: (state) => void
 
-
-#### 4. handleRNNavigationStateChange:  (state) => void
-
-需要在NavigationContainer的onStateChange方法中调用，用来监听页面变化，如没有监听则Stack面板为空
+Should be called in the `onStateChange` method of `NavigationContainer` to monitor navigation changes. Without this, the Stack panel will be empty.
 
 ```jsx
 <NavigationContainer
@@ -220,11 +204,9 @@ interface stack {
 </NavigationContainer>
 ```
 
-
-
 #### 5. networkLogger
 
-The instance of networkLogger. You can get or handle all requests.
+The instance of `networkLogger`. You can retrieve or handle all requests.
 
 ```js
 networkLogger.getRequests(); // get all data of request list
@@ -232,21 +214,15 @@ networkLogger.clearRequests(); // clear all data
 ...
 ```
 
-
-
-
-
-## Others 
+## Others
 
 "Clear" means clear all data in this board.
 
 "Close" means close the model of rn-vconsole.
 
-
-
 ## Issues
 
-tsc(tsconfig.json) compile react-native npm library：ReferenceError: React is not defined
+tsc(tsconfig.json) compile react-native npm library: ReferenceError: React is not defined
 
 Origin tsconfig.json:
 
@@ -257,9 +233,9 @@ Origin tsconfig.json:
     "target": "es5",
     "module": "commonjs",
     "lib": [],
-    "allowJs": true,                          /* Allow javascript files to be compiled. */
+    "allowJs": true /* Allow javascript files to be compiled. */,
     "jsx": "react-native",
-    "declaration": true,                   /* Generates corresponding '.d.ts' file. */
+    "declaration": true /* Generates corresponding '.d.ts' file. */,
     "outDir": "./lib",
     "isolatedModules": true,
     "strict": false,
@@ -268,19 +244,21 @@ Origin tsconfig.json:
     "esModuleInterop": true
   },
   "exclude": [
-    "node_modules", "babel.config.js", "metro.config.js", "jest.config.js"
-  ],
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js",
+    "jest.config.js"
+  ]
 }
-
 ```
 
-Change "target、modules、lib" to:
+Change "target, modules, lib" to:
 
 ```json
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "es2017", 
+    "target": "es2017",
     "module": "ESNext",
     "lib": [ "es2017" ],
 	...
