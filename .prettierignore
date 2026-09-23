@@ -1,0 +1,5 @@
+lib
+node_modules
+examples
+coverage
+pnpm-lock.yaml

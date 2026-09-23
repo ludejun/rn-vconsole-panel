@@ -1,5 +1,4 @@
 // https://github.com/alexbrazier/react-native-network-logger/blob/6c11bb2b7b887fa75aead0fde44523aced84d62b/src/NetworkRequestInfo.ts
-// @ts-nocheck
 import BlobFileReader from 'react-native/Libraries/Blob/FileReader';
 import { Headers, RequestMethod } from './types';
 import { fromEntries } from '../utils';
@@ -74,7 +73,7 @@ export default class NetworkRequestInfo {
         return fromEntries(data?._parts);
       }
       return JSON.parse(data);
-    } catch (e) {
+    } catch {
       return { data };
     }
   }

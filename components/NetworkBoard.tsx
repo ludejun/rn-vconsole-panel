@@ -1,33 +1,33 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import logger from './NetworkLogger'
-import NetworkRequestInfo from './NetworkRequestInfo'
-import { LogContent } from './LogContent'
-import { jsonParse } from '../utils'
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import logger from './NetworkLogger';
+import NetworkRequestInfo from './NetworkRequestInfo';
+import { LogContent } from './LogContent';
+import { jsonParse } from '../utils';
 
 export const Network = () => {
-  const [data, setData] = useState<NetworkRequestInfo[]>([])
-  const sc = useRef(null)
+  const [data, setData] = useState<NetworkRequestInfo[]>([]);
+  const sc = useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   useEffect(() => {
-    setData(logger.getRequests())
-  }, [])
+    setData(logger.getRequests());
+  }, []);
   useEffect(() => {
-    sc.current?.scrollToEnd()
-  }, [data])
+    sc.current?.scrollToEnd();
+  }, [data]);
   const onClickClear = () => {
-    logger.clearRequests()
-    setData([])
-  }
+    logger.clearRequests();
+    setData([]);
+  };
 
   return (
     <View style={defaultStyle.container}>
       <ScrollView ref={sc}>
-        {
-        data.sort((a, b) => Number(a.id) - Number(b.id)).map((request, index) => (
-          <RequestOverview data={request} key={`${request.id}${index}`} />
-        ))
-      }
+        {data
+          .sort((a, b) => Number(a.id) - Number(b.id))
+          .map((request, index) => (
+            <RequestOverview data={request} key={`${request.id}${index}`} />
+          ))}
       </ScrollView>
       <View style={defaultStyle.clear}>
         <TouchableOpacity onPress={() => onClickClear()}>
@@ -35,32 +35,32 @@ export const Network = () => {
         </TouchableOpacity>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const RequestOverview = (props: { data: NetworkRequestInfo }) => {
-  const { data } = props
-  const { method, status, url, duration, requestHeaders, responseHeaders, dataSent } = data
-  const [show, setShow] = useState<'none' | 'flex'>('none')
-  const [requestBody, setBody] = useState(dataSent)
-  const [responseBody, setResp] = useState({})
+  const { data } = props;
+  const { method, status, url, duration, requestHeaders, responseHeaders, dataSent } = data;
+  const [show, setShow] = useState<'none' | 'flex'>('none');
+  const [requestBody, setBody] = useState(dataSent);
+  const [responseBody, setResp] = useState({});
 
   const colorMap = {
     statusGood: '#28a844',
     statusWarning: '#ffc007',
     statusBad: '#dd3444',
-  }
+  };
   const chooseColor = (status: number) => {
-    if (status < 400) return colorMap.statusGood
-     if (status < 500) return colorMap.statusWarning
-     if (status >= 500) return colorMap.statusBad
-  }
+    if (status < 400) return colorMap.statusGood;
+    if (status < 500) return colorMap.statusWarning;
+    if (status >= 500) return colorMap.statusBad;
+  };
 
   const onClickRequest = () => {
-    setShow(show === 'none' ? 'flex' : 'none')
-    setBody(jsonParse(requestBody))
-    data.getResponseBody().then(resp => setResp(jsonParse(resp)))
-  }
+    setShow(show === 'none' ? 'flex' : 'none');
+    setBody(jsonParse(requestBody));
+    data.getResponseBody().then((resp) => setResp(jsonParse(resp)));
+  };
 
   return (
     <>
@@ -71,7 +71,9 @@ const RequestOverview = (props: { data: NetworkRequestInfo }) => {
             <Text style={defaultStyle.text}>{status}</Text>
             <Text style={defaultStyle.text}>{duration > 0 ? `${duration}ms` : 'pending'}</Text>
           </View>
-          <View style={defaultStyle.right}><Text style={{ color: status < 400 ? undefined : chooseColor(status) }}>{url}</Text></View>
+          <View style={defaultStyle.right}>
+            <Text style={{ color: status < 400 ? undefined : chooseColor(status) }}>{url}</Text>
+          </View>
         </View>
       </TouchableOpacity>
       <View style={[defaultStyle.request, { display: show }]}>
@@ -86,8 +88,8 @@ const RequestOverview = (props: { data: NetworkRequestInfo }) => {
       </View>
       <View style={defaultStyle.lineBank} />
     </>
-  )
-}
+  );
+};
 
 const defaultStyle = StyleSheet.create({
   container: {
@@ -145,4 +147,4 @@ const defaultStyle = StyleSheet.create({
     width: 65,
     borderRadius: 5,
   },
-})
+});

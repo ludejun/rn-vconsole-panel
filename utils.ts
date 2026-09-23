@@ -2,7 +2,7 @@ export const jsonParse = (data: any) => {
   let body = null;
   try {
     body = JSON.parse(data);
-  } catch (e) {
+  } catch {
     body = data;
   }
   return body;

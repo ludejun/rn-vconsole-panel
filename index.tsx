@@ -1,6 +1,14 @@
-// @ts-nocheck
-import React, { createRef, useEffect, useState } from 'react'
-import { View, TouchableOpacity, Text, Modal, StyleSheet, ViewStyle, Dimensions } from 'react-native'
+import React, { createRef, useEffect, useState } from 'react';
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  Modal,
+  StyleSheet,
+  ViewStyle,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import {
   ConsoleBoard,
   Network,
@@ -9,13 +17,13 @@ import {
   statusBarHeight,
   StorageBoard,
   StackBoard,
-} from './components'
+} from './components';
 
-export { 
+export {
   statusBarHeight, // 状态栏高度
   logger as networkLogger,
-} 
-export const RNStackRef = createRef<stack[]>() // 记录监控App路由变化，都存这个栈里
+};
+export const RNStackRef = createRef<stack[]>(); // 记录监控App路由变化，都存这个栈里
 export interface stack {
   type: 'stack' | 'tab' | 'drawer';
   name: string;
@@ -24,30 +32,29 @@ export interface stack {
   duration?: number;
 }
 export const handleRNNavigationStateChange = (state: any) => {
-  const changeTime = new Date().getTime()
-  let stack: stack
-  const { index, routes = [], type } = state
-  const { state: routeState, name, params } = routes[index] || {}
-  stack = {
+  const changeTime = new Date().getTime();
+  const { index, routes = [], type } = state;
+  const { state: routeState, name, params } = routes[index] || {};
+  const stack: stack = {
     type,
     name,
     params,
     changeTime,
-  }
+  };
   if (routeState && routeState instanceof Object) {
-    const {index, routes = [], type} = routeState
-    stack.name = routes[index]?.name
-    stack.type = type
-    stack.params = routes[index]?.params
+    const { index, routes = [], type } = routeState;
+    stack.name = routes[index]?.name;
+    stack.type = type;
+    stack.params = routes[index]?.params;
   }
-  if(Array.isArray(RNStackRef.current)) {
-    RNStackRef.current.push(stack)
+  if (Array.isArray(RNStackRef.current)) {
+    RNStackRef.current.push(stack);
   } else {
-    RNStackRef.current = [stack]
+    RNStackRef.current = [stack];
   }
-}
+};
 
- export interface RNConsole {
+export interface RNConsole {
   entryVisible?: boolean; // 可以通过父组件控制面板是否展示
   entryText?: string; // 入口Button显示的文字，默认为RNConsole
   entryStyle?: ViewStyle; // 入口Button的样式
@@ -56,17 +63,17 @@ export const handleRNNavigationStateChange = (state: any) => {
   ignoredHosts?: string[]; // Network中需要忽略的host
   storage?: {
     getAllKeys: () => Promise<string[]>;
-    getItem: (key: string) => Promise<string> | null;
+    getItem: (key: string) => Promise<string | null>;
     setItem?: (key: string, value: string) => Promise<void>;
     removeItem?: (key: string) => Promise<void>;
     clear?: () => Promise<void>;
-   }; // 读取缓存的各种方式，根据传入方法数展示功能，API参考 https://github.com/react-native-async-storage/async-storage#react-native-async-storage
-   definedData?: Record<string, any>; // 在SystemBoard展示的自定义数据
+  }; // 读取缓存的各种方式，根据传入方法数展示功能，API参考 https://github.com/react-native-async-storage/async-storage#react-native-async-storage
+  definedData?: Record<string, any>; // 在SystemBoard展示的自定义数据
 }
-export type BoardType = 'Console' | 'Network' | 'Stack' | 'Storage' | 'System'
-export type consoleLog = {type: string, messages: unknown}[]
+export type BoardType = 'Console' | 'Network' | 'Stack' | 'Storage' | 'System';
+export type consoleLog = { type: string; messages: unknown }[];
 
-const RNConsole: React.FC<RNConsole> = props => {
+const RNConsole: React.FC<RNConsole> = (props) => {
   const {
     entryVisible,
     entryText = '',
@@ -76,47 +83,48 @@ const RNConsole: React.FC<RNConsole> = props => {
     storage,
     definedData,
     ignoredHosts,
-  } = props
-  const [visible, setVisible] = useState(entryVisible ?? false) // 控制面板是否展示
-  const [boardType, setBoardType] = useState<BoardType>(null) // 当前面板
+  } = props;
+  const [visible, setVisible] = useState(entryVisible ?? false); // 控制面板是否展示
+  const [boardType, setBoardType] = useState<BoardType | null>(null); // 当前面板
 
   const init = () => {
     global['$BOARD_LOGGER'] = {
-      Console: [], 
-    }
-  }
-  
-  const addLog = (boardType: BoardType, log: any) => {
-    if (global.$BOARD_LOGGER[boardType].length > maxLogLength) global.$BOARD_LOGGER[boardType].shift()
+      Console: [],
+    };
+  };
 
-    global.$BOARD_LOGGER[boardType].push(log)
-  }
+  const addLog = (boardType: BoardType, log: any) => {
+    if (global.$BOARD_LOGGER[boardType].length > maxLogLength)
+      global.$BOARD_LOGGER[boardType].shift();
+
+    global.$BOARD_LOGGER[boardType].push(log);
+  };
 
   useEffect(() => {
-    init()
+    init();
 
     // 代理console
-    const $console = { ...global.console }
-    consoleType.forEach(type => {
-      global.console[type] = (...messages) => {
-        $console[type]?.apply(null, messages)
-        addLog('Console', { type, messages })
-      }
-    })
+    const $console = { ...global.console };
+    consoleType.forEach((type) => {
+      global.console[type] = (...messages: unknown[]) => {
+        $console[type]?.apply(null, messages);
+        addLog('Console', { type, messages });
+      };
+    });
 
     // 使用react-native-network-logger中的代理
     logger.enableXHRInterception({
       ignoredHosts: ignoredHosts || ['localhost:8081'],
       maxRequests: maxLogLength,
-    })
-  }, [])
+    });
+  }, []);
   const onClickEntryButton = () => {
-    setVisible(true)
-    setBoardType('Console')
-  }
-  const onClickBoardType = (type: string) => {
-    setBoardType(type)
-  }
+    setVisible(true);
+    setBoardType('Console');
+  };
+  const onClickBoardType = (type: BoardType) => {
+    setBoardType(type);
+  };
 
   return (
     <>
@@ -126,25 +134,38 @@ const RNConsole: React.FC<RNConsole> = props => {
         </TouchableOpacity>
       </View>
       <Modal visible={visible}>
-        <View style={[defaultStyle.modal, { height: Dimensions.get('window').height - 30, paddingTop: Platform.OS === 'ios' ? 70 : 30 }]}>
-          <View style={defaultStyle.type}>
+        <View
+          style={[
+            defaultStyle.modal,
             {
-              (['Console', 'Network', 'Stack', 'Storage', 'System']).map(type => (
-                <TouchableOpacity key={type} onPress={() => onClickBoardType(type)} style={[defaultStyle.button, boardType === type ? defaultStyle.activeButton : null]}>
-                  <Text style={defaultStyle.label}>{type}</Text>
-                </TouchableOpacity>
-              ))
-            }
+              height: Dimensions.get('window').height - 30,
+              paddingTop: Platform.OS === 'ios' ? 70 : 30,
+            },
+          ]}
+        >
+          <View style={defaultStyle.type}>
+            {(['Console', 'Network', 'Stack', 'Storage', 'System'] as BoardType[]).map((type) => (
+              <TouchableOpacity
+                key={type}
+                onPress={() => onClickBoardType(type)}
+                style={[defaultStyle.button, boardType === type ? defaultStyle.activeButton : null]}
+              >
+                <Text style={defaultStyle.label}>{type}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
           <View style={defaultStyle.list}>
-            {
-              boardType === 'Console' ? <ConsoleBoard types={consoleType} />
-                : boardType === 'Network' ? <Network />
-                : boardType === 'System' ? <DeviceBoard definedData={definedData}/>
-                : boardType === 'Storage' ? <StorageBoard storage={storage} />
-                : boardType === 'Stack' ? <StackBoard /> : null
-            }
-
+            {boardType === 'Console' ? (
+              <ConsoleBoard types={consoleType} />
+            ) : boardType === 'Network' ? (
+              <Network />
+            ) : boardType === 'System' ? (
+              <DeviceBoard definedData={definedData} />
+            ) : boardType === 'Storage' ? (
+              <StorageBoard storage={storage} />
+            ) : boardType === 'Stack' ? (
+              <StackBoard />
+            ) : null}
           </View>
           <View style={[defaultStyle.close, { top: Platform.OS === 'ios' ? 40 : 2 }]}>
             <TouchableOpacity onPress={() => setVisible(false)}>
@@ -154,8 +175,8 @@ const RNConsole: React.FC<RNConsole> = props => {
         </View>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 const defaultStyle = StyleSheet.create({
   entry: {
@@ -207,6 +228,6 @@ const defaultStyle = StyleSheet.create({
     width: 65,
     borderRadius: 5,
   },
-})
+});
 
-export default RNConsole
+export default RNConsole;
