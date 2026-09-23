@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
-import { globSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readdirSync, readFileSync } from 'node:fs';
+import { extname, join, relative, resolve } from 'node:path';
 
 /**
  * Regression guard.
@@ -23,11 +22,26 @@ interface SourceFile {
   code: string;
 }
 
-const sourceFiles: SourceFile[] = globSync('{index.tsx,utils.ts,components/**/*.{ts,tsx}}', {
-  cwd: resolve(process.cwd()),
-}).map((relative: string) => {
-  const source = readFileSync(resolve(relative), 'utf8');
-  return { relative, source, code: stripComments(source) };
+/** fs.globSync only landed in Node 22; this package supports Node >= 18. */
+function collectSources(dir: string, root: string, found: string[] = []): string[] {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) collectSources(full, root, found);
+    else if (['.ts', '.tsx'].includes(extname(entry.name)) && !entry.name.endsWith('.d.ts')) {
+      found.push(relative(root, full));
+    }
+  }
+  return found;
+}
+
+const root = resolve(process.cwd());
+const sourceFiles: SourceFile[] = [
+  'index.tsx',
+  'utils.ts',
+  ...collectSources(join(root, 'components'), root),
+].map((relativePath) => {
+  const source = readFileSync(join(root, relativePath), 'utf8');
+  return { relative: relativePath, source, code: stripComments(source) };
 });
 
 /** Commented-out code should not count as a use of an API. */
