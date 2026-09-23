@@ -1,6 +1,6 @@
 {
   "name": "rn-vconsole-panel",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "An on-device debug console for React Native — Console, Network, Router stack, Storage and System info panels, the way Chrome DevTools or vConsole work on the web.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
