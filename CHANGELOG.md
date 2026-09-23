@@ -3,7 +3,23 @@
 All notable changes to this project are documented here. Versions follow
 [Semantic Versioning](https://semver.org/).
 
-## Unreleased
+## 2.0.0 — 2026-09-23
+
+This release fixes a crash that made 1.0.3 unusable: the panel threw
+`ReferenceError: Platform is not defined` the moment it was opened.
+
+### Breaking
+
+- **`exports` now defines the package surface.** Only the package root resolves;
+  deep imports such as `rn-vconsole-panel/components/...` no longer do.
+- **The tarball ships `lib/` only.** `examples/` and its screenshots are gone,
+  taking the published package from ~850 kB to ~20 kB.
+- **The `storage.getItem` prop type changed** from
+  `(key: string) => Promise<string> \| null` to
+  `(key: string) => Promise<string \| null>`, which is what AsyncStorage
+  actually returns. TypeScript consumers passing their own storage adapter may
+  need to adjust the signature; the runtime contract is unchanged.
+- **Node >= 18** is declared in `engines`.
 
 ### Fixed
 
