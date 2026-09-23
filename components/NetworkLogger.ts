@@ -1,9 +1,8 @@
 // https://github.com/alexbrazier/react-native-network-logger/blob/6c11bb2b7b887fa75aead0fde44523aced84d62b/src/Logger.ts
-// @ts-nocheck
 import XHRInterceptor from 'react-native/Libraries/Network/XHRInterceptor';
 import NetworkRequestInfo from './NetworkRequestInfo';
 import { Headers, RequestMethod, StartNetworkLoggingOptions } from './types';
-import { extractHost } from '../utils'
+import { extractHost } from '../utils';
 
 let nextXHRId = 0;
 
@@ -32,10 +31,7 @@ class Logger {
     return this.requests[requestIndex];
   };
 
-  private updateRequest = (
-    index: number,
-    update: Partial<NetworkRequestInfo>,
-  ) => {
+  private updateRequest = (index: number, update: Partial<NetworkRequestInfo>) => {
     const networkInfo = this.getRequest(index);
     if (!networkInfo) return;
     networkInfo.update(update);
@@ -53,12 +49,7 @@ class Logger {
       }
     }
 
-    const newRequest = new NetworkRequestInfo(
-      `${nextXHRId}`,
-      'XMLHttpRequest',
-      method,
-      url,
-    );
+    const newRequest = new NetworkRequestInfo(`${nextXHRId}`, 'XMLHttpRequest', method, url);
 
     if (this.requests.length >= this.maxRequests) {
       this.requests.pop();
@@ -67,11 +58,7 @@ class Logger {
     this.requests.unshift(newRequest);
   };
 
-  private requestHeadersCallback = (
-    header: string,
-    value: string,
-    xhr: XHR,
-  ) => {
+  private requestHeadersCallback = (header: string, value: string, xhr: XHR) => {
     const networkInfo = this.getRequest(xhr._index);
     if (!networkInfo) return;
     networkInfo.requestHeaders[header] = value;
@@ -118,10 +105,7 @@ class Logger {
   };
 
   enableXHRInterception = (options?: StartNetworkLoggingOptions) => {
-    if (
-      this.enabled ||
-      (XHRInterceptor.isInterceptorEnabled() && !options?.forceEnable)
-    ) {
+    if (this.enabled || (XHRInterceptor.isInterceptorEnabled() && !options?.forceEnable)) {
       if (!this.enabled) {
         console.warn(
           'network interceptor has not been enabled as another interceptor is already running (e.g. another debugging program). Use option `forceEnable: true` to override this behaviour.',
@@ -141,13 +125,8 @@ class Logger {
     }
 
     if (options?.ignoredHosts) {
-      if (
-        !Array.isArray(options.ignoredHosts) ||
-        typeof options.ignoredHosts[0] !== 'string'
-      ) {
-        console.warn(
-          'ignoredHosts must be an array of strings. The logger has not been started.',
-        );
+      if (!Array.isArray(options.ignoredHosts) || typeof options.ignoredHosts[0] !== 'string') {
+        console.warn('ignoredHosts must be an array of strings. The logger has not been started.');
         return;
       }
       this.ignoredHosts = new Set(options.ignoredHosts);
@@ -173,4 +152,4 @@ class Logger {
   };
 }
 
-export default new Logger()
+export default new Logger();

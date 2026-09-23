@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useEffect, useRef } from 'react';
 import {
   Appearance,
@@ -18,22 +17,30 @@ export const statusBarHeight =
   Platform.OS !== 'ios'
     ? StatusBar.currentHeight
     : [667, 736].indexOf(Dimensions.get('window').height) > -1
-    ? 20
-    : 44;
-export interface DeviceBoard {
+      ? 20
+      : 44;
+export interface DeviceBoardProps {
   definedData?: Record<string, any>;
 }
 
-export const DeviceBoard = (props: DeviceBoard) => {
+/**
+ * Manufacturer, Brand and Model live only on the Android member of
+ * Platform.constants, which TypeScript cannot narrow from Platform.OS alone.
+ */
+const androidModel = () => {
+  const constants = Platform.constants as Partial<
+    Record<'Manufacturer' | 'Brand' | 'Model', string>
+  >;
+  return `${constants.Manufacturer}/${constants.Brand}/${constants.Model}`;
+};
+
+export const DeviceBoard = (props: DeviceBoardProps) => {
   const { definedData } = props;
   const { major, minor, patch } = Platform.constants?.reactNativeVersion || {};
   const data = {
     os: Platform.OS,
     osVersion: Platform.Version,
-    model:
-      Platform.OS === 'ios'
-        ? 'iPhone'
-        : `${Platform.constants?.Manufacturer}/${Platform.constants?.Brand}/${Platform.constants?.Model}`,
+    model: Platform.OS === 'ios' ? 'iPhone' : androidModel(),
     RNVersion: `${major}.${minor}.${patch}`,
     colorScheme: Appearance.getColorScheme(),
     windowWidth: Dimensions.get('window').width,
@@ -41,7 +48,7 @@ export const DeviceBoard = (props: DeviceBoard) => {
     pixelRatio: PixelRatio.get(),
     statusBarHeight,
   };
-  const sc = useRef(null);
+  const sc = useRef<React.ComponentRef<typeof ScrollView>>(null);
 
   useEffect(() => {
     sc.current?.scrollToEnd();
@@ -56,7 +63,7 @@ export const DeviceBoard = (props: DeviceBoard) => {
               <Text>{key}</Text>
             </View>
             <View style={defaultStyle.right}>
-              <LogContent messages={data[key]} />
+              <LogContent messages={(data as Record<string, unknown>)[key]} />
             </View>
           </View>
         ))}

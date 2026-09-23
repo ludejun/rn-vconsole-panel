@@ -1,6 +1,40 @@
-# rn-vconsole-panel
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/ludejun/rn-vconsole-panel@master/assets/logo.svg" width="96" height="96" alt="rn-vconsole-panel" />
+</p>
 
-A Logger that runs on the device is the same as the chrome console or [vConsole](https://github.com/Tencent/vConsole). rn-vconsole-panel can log the Console, Network, Router Stack, Storage, System Info automatic.
+<h1 align="center">rn-vconsole-panel</h1>
+
+<p align="center">
+  An on-device debug console for React Native — Console, Network, Router stack,
+  Storage and System panels, the way Chrome DevTools or
+  <a href="https://github.com/Tencent/vConsole">vConsole</a> work on the web.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel"><img src="https://img.shields.io/npm/v/rn-vconsole-panel.svg?logo=npm&color=cb3837" alt="npm version" /></a>
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel"><img src="https://img.shields.io/npm/dm/rn-vconsole-panel.svg?color=cb3837" alt="npm downloads" /></a>
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel"><img src="https://img.shields.io/npm/types/rn-vconsole-panel.svg?logo=typescript&logoColor=white" alt="types included" /></a>
+  <br />
+  <a href="https://github.com/ludejun/rn-vconsole-panel/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/rn-vconsole-panel.svg?color=blue" alt="license" /></a>
+  <a href="https://github.com/ludejun/rn-vconsole-panel/stargazers"><img src="https://img.shields.io/github/stars/ludejun/rn-vconsole-panel?logo=github&color=yellow" alt="GitHub stars" /></a>
+  <a href="https://github.com/ludejun/rn-vconsole-panel/blob/master/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome" /></a>
+  <img src="https://img.shields.io/badge/react--native-%3E%3D0.59-61dafb?logo=react&logoColor=white" alt="react-native >= 0.59" />
+  <img src="https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey" alt="iOS and Android" />
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel">npm</a>
+  ·
+  <a href="./CHANGELOG.md">Changelog</a>
+  ·
+  <a href="./CONTRIBUTING.md">Contributing</a>
+  ·
+  <a href="./readme_CN.md">中文文档</a>
+</p>
+
+---
+
+A Logger that runs on the device, the same way the Chrome console or [vConsole](https://github.com/Tencent/vConsole) does. rn-vconsole-panel records the Console, network requests, the router stack, storage and system info automatically.
 
 ## Features
 
@@ -25,10 +59,14 @@ A Logger that runs on the device is the same as the chrome console or [vConsole]
 ## Installation
 
 ```shell
+pnpm add rn-vconsole-panel
+# or
 npm install rn-vconsole-panel
 # or
 yarn add rn-vconsole-panel
 ```
+
+TypeScript declarations ship with the package — no `@types/…` needed.
 
 ## Quick Start
 
@@ -108,7 +146,7 @@ interface RNConsole {
   ignoredHosts?: string[]; // Hosts to ignore in the Network panel
   storage?: {
     getAllKeys: () => Promise<string[]>;
-    getItem: (key: string) => Promise<string>;
+    getItem: (key: string) => Promise<string | null>;
     setItem?: (key: string, value: string) => Promise<void>;
     removeItem?: (key: string) => Promise<void>;
     clear?: () => Promise<void>;
@@ -220,49 +258,11 @@ networkLogger.clearRequests(); // clear all data
 
 "Close" means close the model of rn-vconsole.
 
-## Issues
+## Contributing
 
-tsc(tsconfig.json) compile react-native npm library: ReferenceError: React is not defined
+Bug reports and pull requests are welcome — see [CONTRIBUTING.md](./CONTRIBUTING.md) for the
+fork → pull request flow.
 
-Origin tsconfig.json:
+## License
 
-```json
-{
-  "compilerOptions": {
-    /* Basic Options */
-    "target": "es5",
-    "module": "commonjs",
-    "lib": [],
-    "allowJs": true /* Allow javascript files to be compiled. */,
-    "jsx": "react-native",
-    "declaration": true /* Generates corresponding '.d.ts' file. */,
-    "outDir": "./lib",
-    "isolatedModules": true,
-    "strict": false,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
-  },
-  "exclude": [
-    "node_modules",
-    "babel.config.js",
-    "metro.config.js",
-    "jest.config.js"
-  ]
-}
-```
-
-Change "target, modules, lib" to:
-
-```json
-{
-  "compilerOptions": {
-    /* Basic Options */
-    "target": "es2017",
-    "module": "ESNext",
-    "lib": [ "es2017" ],
-	...
-}
-```
-
-OK, success. https://stackoverflow.com/questions/57182197/react-native-jest-ts-jest-referenceerror-react-is-not-defined
+[MIT](./LICENSE)

@@ -1,4 +1,37 @@
-# rn-vconsole-panel
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/ludejun/rn-vconsole-panel@master/assets/logo.svg" width="96" height="96" alt="rn-vconsole-panel" />
+</p>
+
+<h1 align="center">rn-vconsole-panel</h1>
+
+<p align="center">
+  运行在设备上的 React Native 调试控制台 —— Console、网络请求、路由栈、缓存、系统信息五个面板，
+  用起来和网页上的 Chrome DevTools 或 <a href="https://github.com/Tencent/vConsole">vConsole</a> 一样。
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel"><img src="https://img.shields.io/npm/v/rn-vconsole-panel.svg?logo=npm&color=cb3837" alt="npm 版本" /></a>
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel"><img src="https://img.shields.io/npm/dm/rn-vconsole-panel.svg?color=cb3837" alt="npm 月下载量" /></a>
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel"><img src="https://img.shields.io/npm/types/rn-vconsole-panel.svg?logo=typescript&logoColor=white" alt="内置类型定义" /></a>
+  <br />
+  <a href="https://github.com/ludejun/rn-vconsole-panel/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/rn-vconsole-panel.svg?color=blue" alt="开源协议" /></a>
+  <a href="https://github.com/ludejun/rn-vconsole-panel/stargazers"><img src="https://img.shields.io/github/stars/ludejun/rn-vconsole-panel?logo=github&color=yellow" alt="GitHub Star 数" /></a>
+  <a href="https://github.com/ludejun/rn-vconsole-panel/blob/master/CONTRIBUTING.md"><img src="https://img.shields.io/badge/PR-欢迎提交-brightgreen.svg" alt="欢迎 PR" /></a>
+  <img src="https://img.shields.io/badge/react--native-%3E%3D0.59-61dafb?logo=react&logoColor=white" alt="react-native >= 0.59" />
+  <img src="https://img.shields.io/badge/platform-iOS%20%7C%20Android-lightgrey" alt="iOS 和 Android" />
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/rn-vconsole-panel">npm</a>
+  ·
+  <a href="./CHANGELOG.md">更新日志</a>
+  ·
+  <a href="./CONTRIBUTING.md">贡献指南</a>
+  ·
+  <a href="./readme.md">English</a>
+</p>
+
+---
 
 一个运行在设备上的日志工具，与 Chrome 控制台或 [vConsole](https://github.com/Tencent/vConsole) 类似。rn-vconsole-panel 可以自动记录 Console、网络请求、路由栈、存储、系统信息等。
 
@@ -108,7 +141,7 @@ interface RNConsole {
   ignoredHosts?: string[]; // Network 面板中需要忽略的 host
   storage?: {
     getAllKeys: () => Promise<string[]>;
-    getItem: (key: string) => Promise<string>;
+    getItem: (key: string) => Promise<string | null>;
     setItem?: (key: string, value: string) => Promise<void>;
     removeItem?: (key: string) => Promise<void>;
     clear?: () => Promise<void>;
@@ -220,49 +253,10 @@ networkLogger.clearRequests(); // 清除所有请求数据
 
 "Close" 表示关闭 rn-vconsole 的模型。
 
-## 问题
+## 参与贡献
 
-tsc(tsconfig.json) 编译 react-native npm 库时出现：ReferenceError: React is not defined
+欢迎提 issue 和 PR —— fork → Pull Request 的流程见 [CONTRIBUTING.md](./CONTRIBUTING.md)。
 
-原始 tsconfig.json：
+## 开源协议
 
-```json
-{
-  "compilerOptions": {
-    /* 基本选项 */
-    "target": "es5",
-    "module": "commonjs",
-    "lib": [],
-    "allowJs": true /* 允许编译 JavaScript 文件 */,
-    "jsx": "react-native",
-    "declaration": true /* 生成对应的 '.d.ts' 文件 */,
-    "outDir": "./lib",
-    "isolatedModules": true,
-    "strict": false,
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
-  },
-  "exclude": [
-    "node_modules",
-    "babel.config.js",
-    "metro.config.js",
-    "jest.config.js"
-  ]
-}
-```
-
-将 "target、modules、lib" 修改为：
-
-```json
-{
-  "compilerOptions": {
-    /* 基本选项 */
-    "target": "es2017",
-    "module": "ESNext",
-    "lib": [ "es2017" ],
-	...
-}
-```
-
-OK, 成功。 https://stackoverflow.com/questions/57182197/react-native-jest-ts-jest-referenceerror-react-is-not-defined
+[MIT](./LICENSE)
